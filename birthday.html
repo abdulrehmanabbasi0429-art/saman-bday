@@ -1,260 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy Birthday Saman 🎉</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Dancing+Script:wght@700&display=swap');
+<!-- Replace your window.onload script with this -->
+<script>
+  // Tailwind script already loaded
 
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
+  function createBalloons() {
+    const container = document.getElementById('balloons');
+    for (let i = 0; i < 25; i++) {
+      const balloon = document.createElement('div');
+      balloon.className = 'balloon';
+      balloon.style.left = Math.random() * 100 + 'vw';
+      balloon.style.animationDuration = (Math.random() * 6 + 7) + 's';
+      balloon.style.opacity = Math.random() * 0.7 + 0.4;
+      balloon.style.background = `radial-gradient(circle at 30% 20%, #fff, ${['#ff69b4', '#ff1493', '#db2777', '#c026d3'][Math.floor(Math.random()*4)]})`;
+      container.appendChild(balloon);
+      
+      setTimeout(() => {
+        balloon.remove();
+      }, 15000);
     }
+  }
+
+  // Confetti
+  function launchConfetti() {
+    const colors = ['#ff69b4', '#ff1493', '#c026d3', '#ffffff'];
+    for (let i = 0; i < 80; i++) {
+      setTimeout(() => {
+        const confetti = document.createElement('div');
+        confetti.style.position = 'absolute';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = '-10px';
+        confetti.style.width = '12px';
+        confetti.style.height = '12px';
+        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.opacity = Math.random() + 0.5;
+        confetti.style.zIndex = '50';
+        document.getElementById('confetti').appendChild(confetti);
+
+        const duration = Math.random() * 4 + 3;
+        confetti.animate([
+          { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
+          { transform: `translateY(${window.innerHeight + 100}px) rotate(${Math.random() * 800}deg)`, opacity: 0 }
+        ], {
+          duration: duration * 1000,
+          easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+        });
+
+        setTimeout(() => confetti.remove(), duration * 1000 + 1000);
+      }, i * 8);
+    }
+  }
+
+  function goToPage(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
     
-    .title-font {
-      font-family: 'Playfair Display', serif;
-    }
+    const target = document.getElementById(`page${page}`);
+    target.classList.remove('hidden');
     
-    .wish-font {
-      font-family: 'Dancing Script', cursive;
-    }
+    if (page === 1) createBalloons();
+    if (page === 3) launchConfetti();
+  }
 
-    .balloon {
-      position: absolute;
-      width: 60px;
-      height: 80px;
-      background: radial-gradient(circle at 30% 20%, #fff, #ff69b4);
-      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-      animation: float 8s infinite linear;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
+  // Auto update name
+  document.getElementById('nameInput').addEventListener('input', function() {
+    document.getElementById('nameDisplay').textContent = this.value || "Saman";
+  });
 
-    .balloon::after {
-      content: '';
-      position: absolute;
-      bottom: -15px;
-      left: 50%;
-      width: 4px;
-      height: 30px;
-      background: #fff;
-      transform: translateX(-50%);
-    }
+  // Music autoplay fix
+  function playMusic() {
+    const music = document.getElementById('bgMusic');
+    music.play().catch(() => {});
+  }
 
-    @keyframes float {
-      0% { transform: translateY(100vh) rotate(0deg); }
-      100% { transform: translateY(-100px) rotate(25deg); }
-    }
+  document.addEventListener('click', playMusic);
 
-    .neon-text {
-      text-shadow: 
-        0 0 10px #ff69b4,
-        0 0 20px #ff69b4,
-        0 0 40px #ff1493,
-        0 0 60px #ff1493;
-    }
-
-    .page {
-      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-  </style>
-</head>
-<body class="bg-pink-100 overflow-hidden">
-
-  <!-- Page 1 -->
-  <div id="page1" class="page min-h-screen w-full flex flex-col items-center justify-center relative bg-gradient-to-br from-pink-400 via-pink-500 to-purple-500">
-    <!-- Balloons -->
-    <div id="balloons" class="absolute inset-0 overflow-hidden"></div>
-    
-    <div class="relative z-10 text-center px-6">
-      <div class="mb-8">
-        <i class="fas fa-heart text-white text-6xl animate-pulse"></i>
-      </div>
-      <h1 class="title-font text-5xl md:text-6xl text-white font-bold mb-4 tracking-wide neon-text">
-        Happy Birthday
-      </h1>
-      <div class="bg-white/20 backdrop-blur-md rounded-3xl p-8 shadow-2xl border border-white/30">
-        <input 
-          id="nameInput"
-          type="text" 
-          value="Saman"
-          class="w-full text-center text-4xl font-bold bg-transparent outline-none text-white placeholder-pink-200"
-          placeholder="Enter Name">
-      </div>
-      <button onclick="goToPage(2)" 
-        class="mt-12 px-12 py-5 bg-white text-pink-600 rounded-2xl text-xl font-bold shadow-xl hover:scale-110 transition-transform flex items-center gap-3 mx-auto">
-        <span>Continue</span>
-        <i class="fas fa-arrow-right"></i>
-      </button>
-    </div>
-
-    <div class="absolute bottom-8 text-white text-sm flex items-center gap-2">
-      <i class="fas fa-gift"></i>
-      From your son Abdul Rehman Abbasi
-    </div>
-  </div>
-
-  <!-- Page 2 -->
-  <div id="page2" class="page min-h-screen w-full hidden flex-col items-center justify-center bg-gradient-to-br from-pink-500 to-purple-600 p-6">
-    <div class="max-w-md w-full">
-      <!-- Decorative Box -->
-      <div class="relative bg-white rounded-3xl p-10 shadow-2xl border-8 border-pink-300">
-        <!-- Curved top decoration -->
-        <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-24 h-12 bg-pink-400 rounded-t-full"></div>
-        
-        <div class="text-center">
-          <div class="text-pink-500 text-4xl mb-4">🎂 🎉 🎁</div>
-          <h1 class="title-font text-5xl text-pink-600 font-bold neon-text">Happy Birthday</h1>
-          <h2 id="nameDisplay" class="title-font text-6xl text-purple-700 font-bold mt-2">Saman</h2>
-          
-          <div class="my-10 border-t-2 border-dashed border-pink-300"></div>
-          
-          <div class="text-left space-y-4 text-gray-700 text-lg leading-relaxed wish-font">
-            <p class="text-center text-2xl text-pink-500">My Dearest Mother,</p>
-            
-            <p>On your special day, I want to thank you for all the love, care, and sacrifices you've made for me.</p>
-            
-            <p>You are my first teacher, my best friend, and the strongest woman I know. Your smile lights up our home and your prayers protect us every day.</p>
-            
-            <p>May Allah bless you with endless happiness, perfect health, and all the joy your heart desires.</p>
-            
-            <p class="text-center text-xl text-purple-600">I love you more than words can say 💖</p>
-            
-            <p class="text-right text-pink-600 font-bold">- Abdul Rehman Abbasi</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex justify-between mt-10">
-        <button onclick="goToPage(1)" 
-          class="px-8 py-4 bg-white/20 text-white rounded-2xl flex items-center gap-2">
-          <i class="fas fa-arrow-left"></i>
-        </button>
-        <button onclick="goToPage(3)" 
-          class="px-10 py-4 bg-white text-pink-600 font-bold rounded-2xl shadow-xl hover:scale-105 transition-all">
-          Next Wish →
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Page 3 -->
-  <div id="page3" class="page min-h-screen w-full hidden flex-col items-center justify-center bg-gradient-to-br from-purple-600 to-pink-500 p-6 relative overflow-hidden">
-    <!-- Confetti Container -->
-    <div id="confetti" class="absolute inset-0"></div>
-
-    <div class="text-center max-w-md z-10">
-      <div class="text-7xl mb-8">🌟🙏🌸</div>
-      
-      <h1 class="title-font text-white text-5xl font-bold neon-text mb-8">
-        Blessings for Your Future Years
-      </h1>
-      
-      <div class="bg-white/20 backdrop-blur-lg rounded-3xl p-8 text-white space-y-6 text-left">
-        <div class="flex gap-4">
-          <span class="text-3xl">💖</span>
-          <p>May your heart always be filled with peace and happiness.</p>
-        </div>
-        <div class="flex gap-4">
-          <span class="text-3xl">🧿</span>
-          <p>May Allah protect you from every harm and grant you good health always.</p>
-        </div>
-        <div class="flex gap-4">
-          <span class="text-3xl">🌷</span>
-          <p>May every year bring you more joy, more success, and more reasons to smile.</p>
-        </div>
-        <div class="flex gap-4">
-          <span class="text-3xl">🤲</span>
-          <p>May all your prayers be accepted and all your wishes come true.</p>
-        </div>
-      </div>
-
-      <div class="mt-12 text-white">
-        <p class="text-2xl wish-font">With all my love,</p>
-        <p class="text-3xl font-bold mt-1">Abdul Rehman Abbasi</p>
-      </div>
-
-      <button onclick="goToPage(2)" 
-        class="mt-16 px-8 py-4 bg-white text-pink-600 rounded-2xl text-lg font-bold">
-        ← Back
-      </button>
-    </div>
-  </div>
-
-  <script>
-    // Tailwind script already loaded
-
-    function createBalloons() {
-      const container = document.getElementById('balloons');
-      for (let i = 0; i < 25; i++) {
-        const balloon = document.createElement('div');
-        balloon.className = 'balloon';
-        balloon.style.left = Math.random() * 100 + 'vw';
-        balloon.style.animationDuration = (Math.random() * 6 + 7) + 's';
-        balloon.style.opacity = Math.random() * 0.7 + 0.4;
-        balloon.style.background = `radial-gradient(circle at 30% 20%, #fff, ${['#ff69b4', '#ff1493', '#db2777', '#c026d3'][Math.floor(Math.random()*4)]})`;
-        container.appendChild(balloon);
-        
-        // Remove after animation
-        setTimeout(() => {
-          balloon.remove();
-        }, 15000);
-      }
-    }
-
-    // Confetti
-    function launchConfetti() {
-      const colors = ['#ff69b4', '#ff1493', '#c026d3', '#ffffff'];
-      for (let i = 0; i < 80; i++) {
-        setTimeout(() => {
-          const confetti = document.createElement('div');
-          confetti.style.position = 'absolute';
-          confetti.style.left = Math.random() * 100 + 'vw';
-          confetti.style.top = '-10px';
-          confetti.style.width = '12px';
-          confetti.style.height = '12px';
-          confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-          confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-          confetti.style.opacity = Math.random() + 0.5;
-          confetti.style.zIndex = '50';
-          document.getElementById('confetti').appendChild(confetti);
-
-          const duration = Math.random() * 4 + 3;
-          confetti.animate([
-            { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
-            { transform: `translateY(${window.innerHeight + 100}px) rotate(${Math.random() * 800}deg)`, opacity: 0 }
-          ], {
-            duration: duration * 1000,
-            easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-          });
-
-          setTimeout(() => confetti.remove(), duration * 1000 + 1000);
-        }, i * 8);
-      }
-    }
-
-    function goToPage(page) {
-      document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-      
-      const target = document.getElementById(`page${page}`);
-      target.classList.remove('hidden');
-      
-      if (page === 1) createBalloons();
-      if (page === 3) launchConfetti();
-    }
-
-    // Auto update name
-    document.getElementById('nameInput').addEventListener('input', function() {
-      document.getElementById('nameDisplay').textContent = this.value || "Saman";
-    });
-
-    // Initialize
-    window.onload = () => {
-      createBalloons();
-      // Show page 1 by default
-      document.getElementById('page1').classList.remove('hidden');
-    };
-  </script>
-</body>
-</html>
+  // Initialize
+  window.onload = () => {
+    createBalloons();
+    document.getElementById('page1').classList.remove('hidden');
+    playMusic();
+  };
+</script>
